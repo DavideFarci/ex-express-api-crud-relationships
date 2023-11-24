@@ -71,6 +71,9 @@ async function store(req, res) {
       image: postToCreate.image,
       content: postToCreate.content,
       published: postToCreate.published,
+      tags: {
+        connect: data.tags.map((tag) => ({ name: tag.name })),
+      },
     },
   });
 
