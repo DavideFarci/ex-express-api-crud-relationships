@@ -60,9 +60,8 @@ async function store(req, res) {
   const postToCreate = req.body;
   const list = await prisma.post.findMany();
   if (!list) {
-    throw new PrismaExeption(
-      "Non è stato possibile verificare i duplicati",
-      500
+    next(
+      new PrismaExeption("Non è stato possibile verificare i duplicati", 500)
     );
   }
   const newPost = await prisma.post.create({
@@ -76,7 +75,7 @@ async function store(req, res) {
   });
 
   if (!newPost) {
-    throw new PrismaExeption("Errore nella creazione del post", 500);
+    next(new PrismaExeption("Errore nella creazione del post", 400));
   }
 
   return res.json(newPost);
@@ -88,9 +87,8 @@ async function update(req, res) {
   const postToUpdate = req.body;
   const list = await prisma.post.findMany();
   if (!list) {
-    throw new PrismaExeption(
-      "Non è stato possibile verificare i duplicati",
-      500
+    next(
+      new PrismaExeption("Non è stato possibile verificare i duplicati", 500)
     );
   }
   const postUpdated = await prisma.post.update({
@@ -106,7 +104,7 @@ async function update(req, res) {
   });
 
   if (!postUpdated) {
-    throw new PrismaExeption("Errore nella modifica del post", 500);
+    next(new PrismaExeption("Errore nella modifica del post", 401));
   }
 
   res.json({
@@ -125,7 +123,7 @@ async function destroy(req, res) {
   });
 
   if (!postToDestroy) {
-    throw new PrismaExeption("Errore nella cancellazione del post", 500);
+    next(new PrismaExeption("Errore nella cancellazione del post", 500));
   }
 
   res.json({ message: "Post eliminato correttamente!" });
