@@ -31,6 +31,18 @@ async function index(req, res, next) {
     skip: (page - 1) * perPage, // pagina dalla quale contare
     take: perPage, // elementi per pagina
     where: filters,
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
   if (!data) {
     next(new PrismaExeption("Qualcosa è andato storto, riprova", 500));
