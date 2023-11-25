@@ -5,7 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const PrismaExeption = require("../exeptions/prismaExeption");
 const { slugControl } = require("../Utilities/functions");
-const { threadId } = require("worker_threads");
+const { validationResult } = require("express-validator");
 
 // INDEX
 async function index(req, res, next) {
@@ -69,6 +69,13 @@ async function show(req, res) {
 
 // STORE
 async function store(req, res) {
+  const validation = validationResult(req);
+  if (!validation.isEmpty()) {
+    return res.status(400).json({
+      message: "Controllare i campi inseriti",
+      errors: validation.array(),
+    });
+  }
   const postToCreate = req.body;
   const list = await prisma.post.findMany();
   if (!list) {
@@ -80,7 +87,6 @@ async function store(req, res) {
     data: {
       title: postToCreate.title,
       slug: slugControl(postToCreate.title, list),
-      // slug: postToCreate.title.toLowerCase().replaceAll(" ", "-"),
       image: postToCreate.image,
       content: postToCreate.content,
       published: postToCreate.published,
