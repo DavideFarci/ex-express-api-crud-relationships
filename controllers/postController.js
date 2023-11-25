@@ -139,6 +139,7 @@ async function update(req, res) {
       slug: slugControl(postToUpdate.title, list),
       image: postToUpdate.image,
       content: postToUpdate.content,
+      published: postToUpdate.published,
     },
   });
 
