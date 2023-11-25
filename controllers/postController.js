@@ -68,11 +68,29 @@ async function store(req, res) {
     data: {
       title: postToCreate.title,
       slug: slugControl(postToCreate.title, list),
+      // slug: postToCreate.title.toLowerCase().replaceAll(" ", "-"),
       image: postToCreate.image,
       content: postToCreate.content,
       published: postToCreate.published,
       tags: {
-        connect: data.tags.map((tag) => ({ name: tag.name })),
+        connect: postToCreate.tags.map((tagId) => ({ id: tagId })),
+      },
+      category: {
+        connect: {
+          id: postToCreate.categoryId,
+        },
+      },
+    },
+    include: {
+      category: {
+        select: {
+          name: true,
+        },
+      },
+      tags: {
+        select: {
+          name: true,
+        },
       },
     },
   });
