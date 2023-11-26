@@ -122,25 +122,46 @@ async function store(req, res) {
 
 // UPDATE (SLUG)
 async function update(req, res) {
+  // Validations
+  const validation = validationResult(req);
+  if (!validation.isEmpty()) {
+    return res.status(400).json({
+      message: "Controllare i campi inseriti",
+      errors: validation.array(),
+    });
+  }
+
+  // Request
   const { slug } = req.params;
   const postToUpdate = req.body;
+  const post = await prisma.post.findUnique({
+    where: {
+      slug: slug,
+    },
+  });
+  if (!post) {
+    next(new PrismaExeption("Post non trovato"));
+  }
+
   const list = await prisma.post.findMany();
   if (!list) {
     next(
       new PrismaExeption("Non è stato possibile verificare i duplicati", 500)
     );
   }
+
   const postUpdated = await prisma.post.update({
     where: {
       slug: slug,
     },
-    data: {
-      title: postToUpdate.title,
-      slug: slugControl(postToUpdate.title, list),
-      image: postToUpdate.image,
-      content: postToUpdate.content,
-      published: postToUpdate.published,
-    },
+    data: postToUpdate,
+    // data: {
+    //   title: postToUpdate.title,
+    //   slug: slugControl(postToUpdate.title, list),
+    //   image: postToUpdate.image,
+    //   content: postToUpdate.content,
+    //   published: postToUpdate.published,
+    // },
   });
 
   if (!postUpdated) {

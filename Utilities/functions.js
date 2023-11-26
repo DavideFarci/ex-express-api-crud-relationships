@@ -1,10 +1,4 @@
 function slugControl(title, list) {
-  if (!title || typeof title !== "string") {
-    throw new Error(
-      "createSlug: Il titolo deve essere presente e deve essere di tipo stringa"
-    );
-  }
-
   if (!list) {
     throw new Error("createSlug: L'array deve essere passato");
   }
