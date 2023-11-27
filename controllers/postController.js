@@ -155,13 +155,6 @@ async function update(req, res) {
       slug: slug,
     },
     data: postToUpdate,
-    // data: {
-    //   title: postToUpdate.title,
-    //   slug: slugControl(postToUpdate.title, list),
-    //   image: postToUpdate.image,
-    //   content: postToUpdate.content,
-    //   published: postToUpdate.published,
-    // },
   });
 
   if (!postUpdated) {
